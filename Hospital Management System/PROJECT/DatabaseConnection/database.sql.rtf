@@ -1,0 +1,99 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2758
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fmodern\fcharset0 Courier;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red56\green71\blue99;\red237\green237\blue237;
+}
+{\*\expandedcolortbl;;\csgray\c0;\cssrgb\c28235\c35294\c46275;\cssrgb\c94510\c94510\c94510;
+}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- Create the database if it doesn't exist\
+CREATE DATABASE IF NOT EXISTS healthcare;\
+\
+-- Use the database\
+USE healthcare;\
+\
+-- Table for all persons (staff and patients)\
+CREATE TABLE IF NOT EXISTS persons (\
+    person_id INT AUTO_INCREMENT PRIMARY KEY,\
+    first_name VARCHAR(50),\
+    last_name VARCHAR(50),\
+    age INT,\
+    gender VARCHAR(10),\
+    role VARCHAR(20) -- Staff or Patient (You can extend this for different roles)\
+);\
+\
+-- Table for login credentials\
+CREATE TABLE IF NOT EXISTS login_credentials (\
+    login_id INT AUTO_INCREMENT PRIMARY KEY,\
+    username VARCHAR(50) UNIQUE,\
+    password VARCHAR(50),\
+    person_id INT UNIQUE, -- Foreign key to persons table\
+    FOREIGN KEY (person_id) REFERENCES persons(person_id)\
+);\
+\
+-- Table for medicines\
+CREATE TABLE IF NOT EXISTS medicines (\
+    medicine_id INT AUTO_INCREMENT PRIMARY KEY,\
+    medicine_name VARCHAR(100),\
+    manufacturer VARCHAR(100)\
+    -- Add other relevant fields (dosage, quantity, etc.)\
+);\
+\
+-- Table for pharmacy staff\
+CREATE TABLE IF NOT EXISTS pharmacy_staff (\
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,\
+    person_id INT UNIQUE, -- Foreign key to persons table\
+    FOREIGN KEY (person_id) REFERENCES persons(person_id)\
+    -- Add other relevant fields (position, department, etc.)\
+);\
+\
+-- Table for lab staff\
+CREATE TABLE IF NOT EXISTS lab_staff (\
+    staff_id INT AUTO_INCREMENT PRIMARY KEY,\
+    person_id INT UNIQUE, -- Foreign key to persons table\
+    FOREIGN KEY (person_id) REFERENCES persons(person_id)\
+    -- Add other relevant fields (position, department, etc.)\
+);\
+\
+-- Table for patients\
+CREATE TABLE IF NOT EXISTS patients (\
+    patient_id INT AUTO_INCREMENT PRIMARY KEY,\
+    person_id INT UNIQUE, -- Foreign key to persons table\
+    FOREIGN KEY (person_id) REFERENCES persons(person_id)\
+    -- Add other relevant fields (medical history, conditions, etc.)\
+);\
+\
+-- Table for prescriptions (Linking patients with medicines)\
+CREATE TABLE IF NOT EXISTS prescriptions (\
+    prescription_id INT AUTO_INCREMENT PRIMARY KEY,\
+    patient_id INT, -- Foreign key to patients table\
+    medicine_id INT, -- Foreign key to medicines table\
+    FOREIGN KEY (patient_id) REFERENCES patients(patient_id),\
+    FOREIGN KEY (medicine_id) REFERENCES medicines(medicine_id)\
+    -- Add other relevant fields (prescription details, dosage, etc.)\
+);\
+\
+Bulk INSERT 
+\f1\fs22 \cf2 \CocoaLigature0 AEDPROJECT.MedicinesDataset.csv\
+FROM \'91path\'92\
+With\
+(\
+FORMAT = \'91CSV\'92\
+FIRSTROW = 2\
+)\
+GO;
+\f0\fs24 \cf0 \CocoaLigature1 \
+\pard\pardeftab720\partightenfactor0
+
+\f2\fs36 \cf3 \cb4 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec3 \
+BULK INSERT dbo.Actors\
+FROM 'C:\\Documents\\Skyvia\\csv-to-mssql\\actor.csv'\
+WITH\
+(\
+        FORMAT='CSV',\
+        FIRSTROW=2\
+)\
+GO}
